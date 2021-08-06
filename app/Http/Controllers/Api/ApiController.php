@@ -3,11 +3,20 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Repositories\CakeRepository;
 use Illuminate\Http\Request;
 use App\Models\Cake;
 
 class ApiController extends Controller
 {
+
+    protected $cakeRepository;
+
+    public function __construct(CakeRepository $cakeRepository)
+    {
+        $this->cakeRepository = $cakeRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +24,9 @@ class ApiController extends Controller
      */
     public function index()
     {
-        return response()->json(Cake::all());
+        $cakes = $this->cakeRepository->all();
+
+        return response()->json($cakes);
     }
 
     /**
@@ -29,9 +40,9 @@ class ApiController extends Controller
         // Camada de validator
 
         // Camada de segurança
-        $datas = $request->only('name', 'weight', 'price', 'quantity');
+        $data = $request->only('name', 'weight', 'price', 'quantity');
         // Camada de Repository
-        $cake = Cake::create($datas);
+        $cake = $this->cakeRepository->store($data);
         // Camada de API Resource
 
         return response()->json($cake);
@@ -45,9 +56,9 @@ class ApiController extends Controller
      */
     public function show($id)
     {
-        $cake = Cake::find($id);
+        $cake = $this->cakeRepository->findById($id);
 
-        return response()->json();
+        return response()->json($cake);
     }
 
     /**
@@ -59,11 +70,9 @@ class ApiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $datas = $request->only('name', 'weight', 'price', 'quantity');
+        $data = $request->only('name', 'weight', 'price', 'quantity');
         // Camada de Repository
-        $cake = Cake::where('cake_id', $id)->update(
-            $datas
-        );
+        $cake = $this->cakeRepository->update($data, $id);
         // Camada de API Resource
 
         return response()->json($cake);
@@ -77,7 +86,7 @@ class ApiController extends Controller
      */
     public function destroy($id)
     {
-        $cake = Cake::destroy('cake_id', $id);
+        $cake = $this->cakeRepository->destroy($id);
 
         return response()->json($cake);
     }
