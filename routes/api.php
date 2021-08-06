@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::get('/cakes', [App\Http\Controllers\Api\ApiController::class, 'index']);
+Route::post('/cake', [App\Http\Controllers\Api\ApiController::class, 'store']);
+Route::get('/cake/{id}', [App\Http\Controllers\Api\ApiController::class, 'show']);
+Route::put('/cake/{id}', [App\Http\Controllers\Api\ApiController::class, 'update']);
+Route::delete('/cake/{id}', [App\Http\Controllers\Api\ApiController::class, 'destroy']);
