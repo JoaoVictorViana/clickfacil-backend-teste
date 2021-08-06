@@ -49,20 +49,10 @@ class EmailCakeController extends Controller
     public function storeList(Request $request)
     {
         $data = $request->only('cake_id', 'list_emails');
-
-        array_map(
-            function ($email) use ($data) {
-                $data = [
-                    'cake_id' => $data['cake_id'],
-                    'email' => $email
-                ];
-
-                $this->emailCakeRepository->store($data);
-            },
-            $data['list_emails']
-        );
-
-        return response()->json(true);
+        
+        $success = $this->emailCakeRepository->storeList($data);
+            
+        return response()->json($success);
     }
 
     /**
