@@ -22,4 +22,6 @@ class EmailInterestedCake extends Model
      * @var string
      */
     protected $primaryKey = 'email_interested_cake_id';
+
+    protected $guarded = [];
 }

@@ -39,10 +39,10 @@ class CakeRepository implements Repository
     public function destroy(int $id): bool {
         Cache::forget('all_cakes'); 
 
-        return Cake::where('cake_id', $id)->destroy($id);
+        return Cake::where('cake_id', $id)->delete($id);
     }
 
-    public function format($data) {
+    public function format($data): array {
         return [
             'name' => $data['name'],
             'weight' => $data['weight'],

@@ -4,17 +4,22 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Repositories\CakeRepository;
+use App\Http\Repositories\EmailCakeRepository;
 use Illuminate\Http\Request;
-use App\Models\Cake;
 
-class ApiController extends Controller
+class CakeController extends Controller
 {
 
     protected $cakeRepository;
 
-    public function __construct(CakeRepository $cakeRepository)
-    {
+    protected $emailCakeRepository;
+
+    public function __construct(
+        CakeRepository $cakeRepository,
+        EmailCakeRepository $emailCakeRepository
+    ) {
         $this->cakeRepository = $cakeRepository;
+        $this->emailCakeRepository = $emailCakeRepository;
     }
 
     /**
@@ -40,9 +45,25 @@ class ApiController extends Controller
         // Camada de validator
 
         // Camada de segurança
-        $data = $request->only('name', 'weight', 'price', 'quantity');
+        $data = $request->only('name', 'weight', 'price', 'quantity', 'list_emails');
+
         // Camada de Repository
         $cake = $this->cakeRepository->store($data);
+
+        if (isset($data['list_emails'])) {
+            array_map(
+                function ($email) use ($cake) {
+                    $data = [
+                        'cake_id' => $cake->cake_id,
+                        'email' => $email
+                    ];
+
+                    $this->emailCakeRepository->store($data);
+                },
+                $data['list_emails']
+            );
+        }
+
         // Camada de API Resource
 
         return response()->json($cake);
@@ -72,10 +93,10 @@ class ApiController extends Controller
     {
         $data = $request->only('name', 'weight', 'price', 'quantity');
         // Camada de Repository
-        $cake = $this->cakeRepository->update($data, $id);
+        $success = $this->cakeRepository->update($data, $id);
         // Camada de API Resource
 
-        return response()->json($cake);
+        return response()->json($success);
     }
 
     /**
@@ -86,8 +107,8 @@ class ApiController extends Controller
      */
     public function destroy($id)
     {
-        $cake = $this->cakeRepository->destroy($id);
+        $success = $this->cakeRepository->destroy($id);
 
-        return response()->json($cake);
+        return response()->json($success);
     }
 }

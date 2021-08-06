@@ -14,8 +14,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/cakes', [App\Http\Controllers\Api\ApiController::class, 'index']);
-Route::post('/cake', [App\Http\Controllers\Api\ApiController::class, 'store']);
-Route::get('/cake/{id}', [App\Http\Controllers\Api\ApiController::class, 'show']);
-Route::put('/cake/{id}', [App\Http\Controllers\Api\ApiController::class, 'update']);
-Route::delete('/cake/{id}', [App\Http\Controllers\Api\ApiController::class, 'destroy']);
+Route::group(['prefix' => 'cake'], function() {
+    Route::get('/', [App\Http\Controllers\Api\CakeController::class, 'index']);
+    Route::post('/', [App\Http\Controllers\Api\CakeController::class, 'store']);
+    Route::get('/{id}', [App\Http\Controllers\Api\CakeController::class, 'show']);
+    Route::put('/{id}', [App\Http\Controllers\Api\CakeController::class, 'update']);
+    Route::delete('/{id}', [App\Http\Controllers\Api\CakeController::class, 'destroy']);
+});
+
+Route::group(['prefix' => 'email'], function() {
+    Route::get('/', [App\Http\Controllers\Api\EmailCakeController::class, 'index']);
+    Route::post('/', [App\Http\Controllers\Api\EmailCakeController::class, 'store']);
+    Route::get('/{id}', [App\Http\Controllers\Api\EmailCakeController::class, 'show']);
+    Route::put('/{id}', [App\Http\Controllers\Api\EmailCakeController::class, 'update']);
+    Route::delete('/{id}', [App\Http\Controllers\Api\EmailCakeController::class, 'destroy']);
+    Route::post('/list', [App\Http\Controllers\Api\EmailCakeController::class, 'storeList']);
+});
