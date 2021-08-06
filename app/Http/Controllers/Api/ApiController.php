@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Cake;
 
 class ApiController extends Controller
 {
@@ -14,7 +15,7 @@ class ApiController extends Controller
      */
     public function index()
     {
-        return response()->json('deu certo!');
+        return response()->json(Cake::all());
     }
 
     /**
@@ -25,7 +26,15 @@ class ApiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Camada de validator
+
+        // Camada de segurança
+        $datas = $request->only('name', 'weight', 'price', 'quantity');
+        // Camada de Repository
+        $cake = Cake::create($datas);
+        // Camada de API Resource
+
+        return response()->json($cake);
     }
 
     /**
@@ -36,7 +45,9 @@ class ApiController extends Controller
      */
     public function show($id)
     {
-        //
+        $cake = Cake::find($id);
+
+        return response()->json();
     }
 
     /**
@@ -48,7 +59,14 @@ class ApiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $datas = $request->only('name', 'weight', 'price', 'quantity');
+        // Camada de Repository
+        $cake = Cake::where('cake_id', $id)->update(
+            $datas
+        );
+        // Camada de API Resource
+
+        return response()->json($cake);
     }
 
     /**
@@ -59,6 +77,8 @@ class ApiController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $cake = Cake::destroy('cake_id', $id);
+
+        return response()->json($cake);
     }
 }
