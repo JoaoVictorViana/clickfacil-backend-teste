@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Http\Repositories\CakeRepository;
+use App\Http\Repositories\EmailCakeRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryProvider extends ServiceProvider
@@ -17,6 +18,10 @@ class RepositoryProvider extends ServiceProvider
     {
         $this->app->bind(CakeRepository::class, function() {
             return new CakeRepository();
+        });
+
+        $this->app->bind(EmailCakeRepository::class, function() {
+            return new EmailCakeRepository();
         });
     }
 
