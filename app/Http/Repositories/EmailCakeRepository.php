@@ -3,8 +3,11 @@
 namespace App\Http\Repositories;
 
 use App\Http\Repositories\Contracts\Repository;
+use App\Mail\InterestedCake;
+use App\Models\Cake;
 use App\Models\EmailInterestedCake;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Mail;
 
 class EmailCakeRepository implements Repository
 {
@@ -45,8 +48,31 @@ class EmailCakeRepository implements Repository
     public function store(array $data): EmailInterestedCake {
         Cache::forget('all_emails_cakes'); 
 
-        return EmailInterestedCake::create($this->format($data));
+        $emailCake =  EmailInterestedCake::create($this->format($data));
+
+        Mail::send(new InterestedCake(Cake::find($data['cake_id']), $data['email']));
+
+        return $emailCake;
     }
+
+    public function storeList(array $data): bool {
+        Cache::forget('all_emails_cakes'); 
+
+        array_map(
+            function ($email) use ($data) {
+                $data = [
+                    'cake_id' => $data['cake_id'],
+                    'email' => $email
+                ];
+
+                $this->store($data);
+            },
+            $data['list_emails']
+        );
+
+        return true;
+    }
+
 
     public function update(array $data, string $id): bool {
         Cache::forget('all_emails_cakes'); 
