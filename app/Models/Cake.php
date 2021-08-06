@@ -23,4 +23,6 @@ class Cake extends Model
      */
     protected $primaryKey = 'cake_id';
 
+    protected $guarded = [];
+
 }
