@@ -34,6 +34,14 @@ return [
             'driver' => 'sync',
         ],
 
+        'job' => [
+            'driver' => 'redis',
+            'connection' => 'queue',
+            'queue' => '{job}',
+            'retry_after' => 90,
+            'block_for' => null,
+        ],
+
         'database' => [
             'driver' => 'database',
             'table' => 'jobs',
