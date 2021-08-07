@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Repositories\CakeRepository;
 use App\Http\Repositories\EmailCakeRepository;
 use App\Http\Resources\CakeResource;
+use Facades\App\Http\Validators\CakeValidator;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -44,7 +45,11 @@ class CakeController extends Controller
      */
     public function store(Request $request)
     {
-        // Camada de validator
+        $validator = CakeValidator::store($request);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 500);
+        }
 
         $data = $request->only('name', 'weight', 'price', 'quantity', 'list_emails');
 
@@ -59,7 +64,7 @@ class CakeController extends Controller
             );
         }
 
-        return new CakeRepository($cake);
+        return new CakeResource($cake);
     }
 
     /**
@@ -82,9 +87,16 @@ class CakeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
+        $validator = CakeValidator::update($request);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 500);
+        }
+
         $data = $request->only('name', 'weight', 'price', 'quantity');
+
         $status = 200;
         $payload = [
             'message' => 'Bolo atualizado com sucesso!',
@@ -106,7 +118,7 @@ class CakeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         $status = 200;
         $payload = [

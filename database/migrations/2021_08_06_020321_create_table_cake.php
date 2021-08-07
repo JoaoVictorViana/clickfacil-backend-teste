@@ -17,7 +17,7 @@ class CreateTableCake extends Migration
             $table->id('cake_id');
             $table->string('name');
             $table->integer('weight');
-            $table->integer('price');
+            $table->float('price');
             $table->integer('quantity');
             $table->timestamps();
         });
