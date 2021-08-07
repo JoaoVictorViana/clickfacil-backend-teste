@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Repositories\EmailCakeRepository;
 use App\Http\Resources\EmailCakeResource;
+use Facades\App\Http\Validators\EmailCakeValidator;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -37,7 +38,11 @@ class EmailCakeController extends Controller
      */
     public function store(Request $request)
     {
-        // Camada de validator
+        $validator = EmailCakeValidator::store($request);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 500);
+        }
 
         $data = $request->only('cake_id', 'email');
 
@@ -48,6 +53,12 @@ class EmailCakeController extends Controller
 
     public function storeList(Request $request)
     {
+        $validator = EmailCakeValidator::storeList($request);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 500);
+        }
+
         $data = $request->only('cake_id', 'list_emails');
         $status = 200;
         $payload = [
@@ -86,6 +97,12 @@ class EmailCakeController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $validator = EmailCakeValidator::update($request);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 500);
+        }
+
         $data = $request->only('cake_id', 'email');
         $status = 200;
         $payload = [
