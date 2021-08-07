@@ -4,15 +4,16 @@ namespace App\Http\Repositories;
 
 use App\Http\Repositories\Contracts\Repository;
 use App\Models\Cake;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class CakeRepository implements Repository
 {
-    public function all(): array {
+    public function all(): Collection {
         if (!cache('all_cakes')) {
             Cache::rememberForever(
                 'all_cakes',
-                fn () => Cake::all()->toArray()
+                fn () => Cake::all()
             );
         }
 

@@ -25,4 +25,8 @@ class Cake extends Model
 
     protected $guarded = [];
 
+    public function emails()
+    {
+        return $this->hasMany(EmailInterestedCake::class, 'cake_id_fk', 'cake_id');
+    }
 }

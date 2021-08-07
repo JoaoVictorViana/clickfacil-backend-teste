@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Repositories\CakeRepository;
 use App\Http\Repositories\EmailCakeRepository;
+use App\Http\Resources\CakeResource;
+use Exception;
 use Illuminate\Http\Request;
 
 class CakeController extends Controller
@@ -31,7 +33,7 @@ class CakeController extends Controller
     {
         $cakes = $this->cakeRepository->all();
 
-        return response()->json($cakes);
+        return CakeResource::collection($cakes);
     }
 
     /**
@@ -44,29 +46,20 @@ class CakeController extends Controller
     {
         // Camada de validator
 
-        // Camada de segurança
         $data = $request->only('name', 'weight', 'price', 'quantity', 'list_emails');
 
-        // Camada de Repository
         $cake = $this->cakeRepository->store($data);
 
         if (isset($data['list_emails'])) {
-            array_map(
-                function ($email) use ($cake) {
-                    $data = [
-                        'cake_id' => $cake->cake_id,
-                        'email' => $email
-                    ];
-
-                    $this->emailCakeRepository->store($data);
-                },
-                $data['list_emails']
+            $this->emailCakeRepository->storeList(
+                [
+                    'cake_id' => $cake->cake_id,
+                    'list_emails' => $data['list_emails']
+                ]
             );
         }
 
-        // Camada de API Resource
-
-        return response()->json($cake);
+        return new CakeRepository($cake);
     }
 
     /**
@@ -75,11 +68,11 @@ class CakeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         $cake = $this->cakeRepository->findById($id);
 
-        return response()->json($cake);
+        return new CakeResource($cake);
     }
 
     /**
@@ -92,11 +85,19 @@ class CakeController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->only('name', 'weight', 'price', 'quantity');
-        // Camada de Repository
-        $success = $this->cakeRepository->update($data, $id);
-        // Camada de API Resource
+        $status = 200;
+        $payload = [
+            'message' => 'Bolo atualizado com sucesso!',
+        ];
 
-        return response()->json($success);
+        try {
+            $this->cakeRepository->update($data, $id);
+        } catch ( Exception $e ) {
+            $status = 500;
+            $payload['message'] = $e->getMessage();
+        }
+
+        return response()->json($payload, $status);
     }
 
     /**
@@ -107,8 +108,18 @@ class CakeController extends Controller
      */
     public function destroy($id)
     {
-        $success = $this->cakeRepository->destroy($id);
+        $status = 200;
+        $payload = [
+            'message' => 'Bolo deletado com sucesso!',
+        ];
 
-        return response()->json($success);
+        try {
+            $this->cakeRepository->destroy($id);
+        } catch ( Exception $e ) {
+            $status = 500;
+            $payload['message'] = $e->getMessage();
+        }
+
+        return response()->json($payload, $status);
     }
 }

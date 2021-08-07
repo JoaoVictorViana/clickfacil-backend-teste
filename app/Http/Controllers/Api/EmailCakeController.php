@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Repositories\EmailCakeRepository;
+use App\Http\Resources\EmailCakeResource;
+use Exception;
 use Illuminate\Http\Request;
 
 class EmailCakeController extends Controller
@@ -24,7 +26,7 @@ class EmailCakeController extends Controller
     {
         $emailsCakes = $this->emailCakeRepository->all();
 
-        return response()->json($emailsCakes);
+        return EmailCakeResource::collection($emailsCakes);
     }
 
     /**
@@ -37,22 +39,29 @@ class EmailCakeController extends Controller
     {
         // Camada de validator
 
-        // Camada de segurança
         $data = $request->only('cake_id', 'email');
-        // Camada de Repository
-        $emailCake = $this->emailCakeRepository->store($data);
-        // Camada de API Resource
 
-        return response()->json($emailCake);
+        $emailCake = $this->emailCakeRepository->store($data);
+
+        return new EmailCakeResource($emailCake);
     }
 
     public function storeList(Request $request)
     {
         $data = $request->only('cake_id', 'list_emails');
-        
-        $success = $this->emailCakeRepository->storeList($data);
-            
-        return response()->json($success);
+        $status = 200;
+        $payload = [
+            'message' => 'E-mails cadastrados com sucesso!',
+        ];
+
+        try {
+            $this->emailCakeRepository->storeList($data);
+        } catch ( Exception $e ) {
+            $status = 500;
+            $payload['message'] = $e->getMessage();
+        }
+
+        return response()->json($payload, $status);
     }
 
     /**
@@ -61,11 +70,11 @@ class EmailCakeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         $emailCake = $this->emailCakeRepository->findById($id);
 
-        return response()->json($emailCake);
+        return new EmailCakeResource($emailCake);
     }
 
     /**
@@ -78,11 +87,19 @@ class EmailCakeController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->only('cake_id', 'email');
-        // Camada de Repository
-        $success = $this->emailCakeRepository->update($data, $id);
-        // Camada de API Resource
+        $status = 200;
+        $payload = [
+            'message' => 'E-mail atualizado com sucesso!',
+        ];
 
-        return response()->json($success);
+        try {
+            $this->emailCakeRepository->update($data, $id);
+        } catch ( Exception $e ) {
+            $status = 500;
+            $payload['message'] = $e->getMessage();
+        }
+
+        return response()->json($payload, $status);
     }
 
     /**
@@ -91,10 +108,20 @@ class EmailCakeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
-        $success = $this->emailCakeRepository->destroy($id);
+        $status = 200;
+        $payload = [
+            'message' => 'E-mail deletado com sucesso!',
+        ];
 
-        return response()->json($success);
+        try {
+            $this->emailCakeRepository->destroy($id);
+        } catch ( Exception $e ) {
+            $status = 500;
+            $payload['message'] = $e->getMessage();
+        }
+
+        return response()->json($payload, $status);
     }
 }
