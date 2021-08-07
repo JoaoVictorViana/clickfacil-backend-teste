@@ -6,15 +6,16 @@ use App\Http\Repositories\Contracts\Repository;
 use App\Jobs\SendEmail;
 use App\Models\Cake;
 use App\Models\EmailInterestedCake;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class EmailCakeRepository implements Repository
 {
-    public function all(): array {
+    public function all(): Collection {
         if (!cache('all_emails_cakes')) {
             Cache::rememberForever(
                 'all_emails_cakes',
-                fn () => EmailInterestedCake::all()->toArray()
+                fn () => EmailInterestedCake::all()
             );
         }
 
@@ -25,29 +26,26 @@ class EmailCakeRepository implements Repository
         return EmailInterestedCake::find($id);
     }
 
-    public function findByCakeId($cake_id): array {
+    public function findByCakeId($cake_id): Collection {
         return EmailInterestedCake::where('cake_id_fk', $cake_id)
-                                    ->get()
-                                    ->toArray();
+                                    ->get();
     }
 
-    public function findByEmail($email): array {
+    public function findByEmail($email): Collection {
         return EmailInterestedCake::where('email', $email)
-                                    ->get()
-                                    ->toArray();
+                                    ->get();
     }
 
-    public function findByEmailAndCakeId($email, $cake_id): array {
+    public function findByEmailAndCakeId($email, $cake_id): Collection {
         return EmailInterestedCake::where('email', $email)
                                     ->where('cake_id_fk', $cake_id)
-                                    ->get()
-                                    ->toArray();
+                                    ->get();
     }
 
     public function store(array $data): EmailInterestedCake {
         Cache::forget('all_emails_cakes'); 
 
-        // $emailCake =  EmailInterestedCake::create($this->format($data));
+        $emailCake =  EmailInterestedCake::create($this->format($data));
 
         SendEmail::dispatch(Cake::find($data['cake_id']), $data['email']);
 
