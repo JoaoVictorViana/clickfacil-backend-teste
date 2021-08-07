@@ -3,11 +3,10 @@
 namespace App\Http\Repositories;
 
 use App\Http\Repositories\Contracts\Repository;
-use App\Mail\InterestedCake;
+use App\Jobs\SendEmail;
 use App\Models\Cake;
 use App\Models\EmailInterestedCake;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Mail;
 
 class EmailCakeRepository implements Repository
 {
@@ -48,11 +47,11 @@ class EmailCakeRepository implements Repository
     public function store(array $data): EmailInterestedCake {
         Cache::forget('all_emails_cakes'); 
 
-        $emailCake =  EmailInterestedCake::create($this->format($data));
+        // $emailCake =  EmailInterestedCake::create($this->format($data));
 
-        Mail::send(new InterestedCake(Cake::find($data['cake_id']), $data['email']));
+        SendEmail::dispatch(Cake::find($data['cake_id']), $data['email']);
 
-        return $emailCake;
+        return EmailInterestedCake::find(1);
     }
 
     public function storeList(array $data): bool {
