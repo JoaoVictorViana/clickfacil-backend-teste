@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  mailhog:
+    build: .
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
