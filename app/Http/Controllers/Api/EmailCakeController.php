@@ -44,7 +44,7 @@ class EmailCakeController extends Controller
             return response()->json($validator->errors(), 500);
         }
 
-        $data = $request->only('cake_id', 'email');
+        $data = $request->only('cake_id_fk', 'email');
 
         $emailCake = $this->emailCakeRepository->store($data);
 
@@ -103,7 +103,7 @@ class EmailCakeController extends Controller
             return response()->json($validator->errors(), 500);
         }
 
-        $data = $request->only('cake_id', 'email');
+        $data = $request->only('cake_id_fk', 'email');
         $status = 200;
         $payload = [
             'message' => 'E-mail atualizado com sucesso!',

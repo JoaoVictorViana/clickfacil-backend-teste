@@ -19,7 +19,7 @@ class EmailCakeValidator
         return Validator::make(
             $request->all(),
             [
-                'cake_id' => 'required|numeric',
+                'cake_id_fk' => 'required|numeric',
                 'email' => 'required|string',
             ],
             $this->messages
@@ -43,7 +43,7 @@ class EmailCakeValidator
         return Validator::make(
             $request->all(),
             [
-                'cake_id' => 'numeric',
+                'cake_id_fk' => 'numeric',
                 'email' => 'string',
             ],
             $this->messages

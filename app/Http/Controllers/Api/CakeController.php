@@ -51,15 +51,15 @@ class CakeController extends Controller
             return response()->json($validator->errors(), 500);
         }
 
-        $data = $request->only('name', 'weight', 'price', 'quantity', 'list_emails');
+        $data = $request->only('name', 'weight', 'price', 'quantity');
 
         $cake = $this->cakeRepository->store($data);
 
-        if (isset($data['list_emails'])) {
+        if (isset($request->list_emails)) {
             $this->emailCakeRepository->storeList(
                 [
                     'cake_id' => $cake->cake_id,
-                    'list_emails' => $data['list_emails']
+                    'list_emails' => $request->list_emails
                 ]
             );
         }

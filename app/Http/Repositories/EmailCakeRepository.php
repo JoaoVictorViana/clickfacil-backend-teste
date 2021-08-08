@@ -3,6 +3,7 @@
 namespace App\Http\Repositories;
 
 use App\Http\Repositories\Contracts\Repository;
+use App\Jobs\CreateEmails;
 use App\Jobs\SendEmail;
 use App\Models\Cake;
 use App\Models\EmailInterestedCake;
@@ -26,47 +27,25 @@ class EmailCakeRepository implements Repository
         return EmailInterestedCake::find($id);
     }
 
-    public function findByCakeId($cake_id): Collection {
-        return EmailInterestedCake::where('cake_id_fk', $cake_id)
-                                    ->get();
-    }
-
-    public function findByEmail($email): Collection {
-        return EmailInterestedCake::where('email', $email)
-                                    ->get();
-    }
-
-    public function findByEmailAndCakeId($email, $cake_id): Collection {
-        return EmailInterestedCake::where('email', $email)
-                                    ->where('cake_id_fk', $cake_id)
-                                    ->get();
-    }
-
     public function store(array $data): EmailInterestedCake {
         Cache::forget('all_emails_cakes'); 
 
-        $emailCake =  EmailInterestedCake::create($this->format($data));
+        $emailCake = EmailInterestedCake::create($data);
 
-        SendEmail::dispatch(Cake::find($data['cake_id']), $data['email']);
+        SendEmail::dispatch(Cake::find($data['cake_id_fk']), $data['email']);
 
-        return EmailInterestedCake::find(1);
+        return $emailCake;
     }
 
     public function storeList(array $data): bool {
         Cache::forget('all_emails_cakes'); 
 
-        array_map(
-            function ($email) use ($data) {
-                $data = [
-                    'cake_id' => $data['cake_id'],
-                    'email' => $email
-                ];
+        $chunck_list_emails = array_chunk($data['list_emails'], 100);
 
-                $this->store($data);
-            },
-            $data['list_emails']
-        );
-
+        foreach ($chunck_list_emails as $chunck_emails) {
+            CreateEmails::dispatch($chunck_emails, $data['cake_id']);
+        }
+        
         return true;
     }
 
@@ -75,7 +54,7 @@ class EmailCakeRepository implements Repository
         Cache::forget('all_emails_cakes'); 
 
         return EmailInterestedCake::where('email_interested_cake_id', $id)
-                    ->update($this->format($data));
+                    ->update($data);
     }
 
     public function destroy(int $id): bool {
@@ -83,12 +62,5 @@ class EmailCakeRepository implements Repository
 
         return EmailInterestedCake::where('email_interested_cake_id', $id)
                                     ->delete($id);
-    }
-
-    public function format($data): array {
-        return [
-            'cake_id_fk' => $data['cake_id'],
-            'email' => $data['email'],
-        ];
     }
 }
