@@ -1,62 +1,144 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Sobre o desafio
 
-## About Laravel
+Esse projeto tem como objetivo resolver o seguinte desafio:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Criar um CRUD de rotas de API para o cadastro de bolos.
+- Os bolos deverão ter Nome, Peso (em gramas), Valor, Quantidade disponível e uma lista de e-mail de interessados.
+- Após o cadastro de e-mails interessados, caso haja bolo disponível, o sistema deve enviar um e-mail para os interessados sobre a disponibilidade do bolo.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Casos a avaliar:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Pode ocorrer de 50.000 clientes se cadastrarem e o processo de envio de emails não deve ser algo impeditivo.
 
-## Learning Laravel
+## Instalação e Configuração
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Requisitos
+Para instalar o projeto em sua máquina são necessários as seguintes ferramentas:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- PHP 7.4
+- Composer
+- MySQL
+- Docker
 
-## Laravel Sponsors
+### Instalação
+Primeiramente clone o repositório com o seguinte comando:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+<code>git clone https://github.com/JoaoVictorViana/clickfacil-backend-teste.git</code>
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[CMS Max](https://www.cmsmax.com/)**
+Em seguida, entre na pasta do projeto
 
-## Contributing
+<code>cd clickfacil-backend-teste</code>
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+E então instale todas as dependências:
 
-## Code of Conduct
+<code>composer install</code>
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Configuração
 
-## Security Vulnerabilities
+Quando finalizar a instalação, crie o arquivo .env com base no arquivo .env.example e coloque as configurações do seu banco de dados.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+<code>cp .env.example .env</code>
+
+>*Atenção: A fins de otimização e de teste, está sendo utilizando o Redis para as queues e Mailhog para o envio de e-mails.*
+
+Em seguida rode o seguinte comando para gerar a API_KEY:
+
+<code>php artisan key:generate</code>
+
+>*Atenção: A fins de otimização e de teste, está sendo utilizando o Redis para as queues e Mailhog para o envio de e-mails. Caso não tenham essas ferramentas em sua máquina, foi incluido neste projeto, as imagens em Docker necessárias, basta executar o comando: <code>docker-compose up -d</code>*
+
+Execute também os seguintes comandos para limpar a cache:
+
+<code>php artisan cache:clear</code>
+<code>php artisan config:cache</code>
+
+
+### Banco de dados
+
+Depois de ter feito todas as configurações será necessário criar o banco de dados em sua máquina e em seguida roda o comando:
+
+<code>php artisan migrate</code>
+
+Pronto agora o projeto está pronto para ser testado!
+
+## API
+
+Para resolve o desafio foi construido uma API. Segue as lista de todas as endpoints, assim como também o que é esperado como entrada e seu respectivo retorno:
+
+### Endpoints de Bolo:
+
+- (GET) "/api/cake": Retorna todos os bolos cadastrados.
+    - Retorno: HTTP/1.1 200 OK
+    - <code>["data": [[cake_id": 1, "name": 'Teste', "weight": 300, "price": 180.00, "quantity": 10, "emails": []]]]</code> 
+
+- (POST) "/api/cake": Cadastra um novo bolo.
+    - Data: <code>["name": 'Teste', "weight": 300, "price": 180.00, "quantity": 10, "list_emails": []]</code>
+    - Retorno: HTTP/1.1 201 OK
+    - <code>["data": ["cake_id": 1, "name": 'Teste', "weight": 300, "price": 180.00, "quantity": 10, "emails": []]]</code>
+
+- (GET) "/api/cake/{id}": Busca por um específico bolo.
+    - Retorno: HTTP/1.1 200 OK
+    - <code>["data": ["cake_id": 1, "name": 'Teste', "weight": 300, "price": 180.00, "quantity": 10, "emails": []]]</code>
+
+- (PUT) "/api/cake/{id}": Atualiza um específico bolo.
+    - Data: <code>["name": 'Teste Edit']</code>
+    - Retorno: HTTP/1.1 200 OK
+    - <code>["message": "Bolo atualizado com sucesso!"]</code>
+
+- (DELETE) "/api/cake/{id}": Remove um específico bolo.
+    - Retorno: HTTP/1.1 200 OK
+    - <code>["message": "Bolo deletado com sucesso!"]</code>
+
+
+### Endpoints de Email:
+
+- (GET) "/api/email": Retorna todos os emails cadastrados.
+    - Retorno: HTTP/1.1 200 OK
+    - <code>["data": ["email_interested_cake_id": 1,
+            "cake_id_fk": 1,
+            "email": "teste@gmail.com"]]</code> 
+
+- (POST) "/api/email": Cadastra um novo e-mail.
+    - Data: <code>["cake_id_fk": 1, "email": "teste@gmail"]</code>
+    - Retorno: HTTP/1.1 201 OK
+    - <code>["data": []]</code>
+
+- (POST) "/api/email/list": Cadastra uma lista de e-mails.
+    - Data: <code>["cake_id_fk": 1, "list_emails": ["teste@gmail"]]</code>
+    - Retorno: HTTP/1.1 200 OK
+    - <code>["data": []]</code>
+
+- (GET) "/api/email/{id}": Busca por um específico email.
+    - Retorno: HTTP/1.1 200 OK
+    - <code>["data": ["email_interested_cake_id": 1,
+            "cake_id_fk": 1,
+            "email": "teste@gmail.com"]]</code>
+
+- (PUT) "/api/email/{id}": Atualiza um específico e-mail.
+    - Data: <code>["email": 'teste@teste']</code>
+    - Retorno: HTTP/1.1 200 OK
+    - <code>["message": "E-mail atualizado com sucesso!"]</code>
+
+- (DELETE) "/api/email/{id}": Remove um específico bolo.
+    - Retorno: HTTP/1.1 200 OK
+    - <code>["message": "E-mail deletado com sucesso!"]</code>
+
+## Testes
+
+Antes de realizar todos os testes, fique atento a essas duas observações:
+- Está sendo utilizado o Redis para processar a Queue, portanto, para testar os envios de e-mails, será necessário executar alguns dos seguintes comandos ou instale o <a href="http://supervisord.org" targe="_blank">supervisor</a>:
+    - Antes de executar os testes: <code>php artisan queue:listen</code>
+    - Depois de executar os testes: <code>php artisan queue:work</code>
+- Como está sendo utilizado o Redis para executar a Queue de forma asyncrona, é necessário armazenar a queue, portanto não está sendo utilizando o RefreshDatabase do Laravel. Com isso é necessário rodar o seguinte comando antes e depois de executar os testes: <code>php artisan migrate:fresh</code>
+
+E para realizar todos os testes, utilize o comando:
+
+<code>php artisan test</code>
+
+Caso tenha instalado e configurado tudo de forma correta, espera-se que todos os testes sejam concluidos com sucesso!
 
 ## License
 
