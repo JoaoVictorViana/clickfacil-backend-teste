@@ -2,14 +2,13 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class EmailCakeTest extends TestCase
 {
     /**
-     * A basic feature test example.
+     * A basic feature test create a email.
      *
      * @return void
      */
@@ -33,7 +32,7 @@ class EmailCakeTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * A basic feature test read a email.
      *
      * @return void
      */
@@ -54,7 +53,7 @@ class EmailCakeTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * A basic feature test update a email.
      *
      * @return void
      */
@@ -73,7 +72,7 @@ class EmailCakeTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * A basic feature test remove a email.
      *
      * @return void
      */
@@ -89,7 +88,7 @@ class EmailCakeTest extends TestCase
 
     
     /**
-     * A basic feature test example.
+     * A basic feature test create a email-list.
      *
      * @return void
      */
@@ -112,7 +111,7 @@ class EmailCakeTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * A basic feature test create email without attribute.
      *
      * @return void
      */
