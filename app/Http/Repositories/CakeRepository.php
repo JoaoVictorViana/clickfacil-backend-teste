@@ -27,28 +27,19 @@ class CakeRepository implements Repository
     public function store(array $data): Cake {
         Cache::forget('all_cakes'); 
 
-        return Cake::create($this->format($data));
+        return Cake::create($data);
     }
 
     public function update(array $data, string $id): bool {
         Cache::forget('all_cakes'); 
 
         return Cake::where('cake_id', $id)
-                    ->create($this->format($data));
+                    ->update($data);
     }
 
     public function destroy(int $id): bool {
         Cache::forget('all_cakes'); 
 
         return Cake::where('cake_id', $id)->delete($id);
-    }
-
-    public function format($data): array {
-        return [
-            'name' => $data['name'],
-            'weight' => $data['weight'],
-            'price' => $data['price'],
-            'quantity' => $data['quantity'],
-        ];
     }
 }
