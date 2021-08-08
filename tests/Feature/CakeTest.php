@@ -2,17 +2,14 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
 class CakeTest extends TestCase
 {
 
     /**
-     * A basic feature test example.
+     * A basic feature test create a cake.
      *
      * @return void
      */
@@ -41,7 +38,7 @@ class CakeTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * A basic feature test read a cake.
      *
      * @return void
      */
@@ -65,7 +62,7 @@ class CakeTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * A basic feature test update a cake.
      *
      * @return void
      */
@@ -84,7 +81,7 @@ class CakeTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * A basic feature test remove a cake.
      *
      * @return void
      */
@@ -99,7 +96,7 @@ class CakeTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * A basic feature test create cake with email list.
      *
      * @return void
      */
@@ -131,7 +128,7 @@ class CakeTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * A basic feature test create cake without attribute.
      *
      * @return void
      */
@@ -154,7 +151,7 @@ class CakeTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
+     * A basic feature test create a cake with 50k e-mails.
      *
      * @return void
      */

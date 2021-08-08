@@ -23,5 +23,10 @@ class EmailInterestedCake extends Model
      */
     protected $primaryKey = 'email_interested_cake_id';
 
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
     protected $guarded = [];
 }

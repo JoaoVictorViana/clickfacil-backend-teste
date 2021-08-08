@@ -23,8 +23,16 @@ class Cake extends Model
      */
     protected $primaryKey = 'cake_id';
 
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
     protected $guarded = [];
 
+     /**
+     * Get the email list for the cake.
+     */
     public function emails()
     {
         return $this->hasMany(EmailInterestedCake::class, 'cake_id_fk', 'cake_id');

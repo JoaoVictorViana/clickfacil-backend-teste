@@ -12,11 +12,26 @@ use Illuminate\Http\Request;
 
 class CakeController extends Controller
 {
-
+    /**
+     * Cake Repository.
+     *
+     * @var App\Http\Repositories\CakeRepository $cakeRepository.
+     */
     protected $cakeRepository;
 
+    /**
+     * Email Cake Repository.
+     *
+     * @var App\Http\Repositories\EmailCakeRepository $emailCakeRepository.
+     */
     protected $emailCakeRepository;
 
+    /**
+     * Construct of CakeController.
+     *
+     * @param  App\Http\Repositories\CakeRepository  $cakeRepository
+     * @param  App\Http\Repositories\EmailCakeRepository  $emailCakeRepository
+     */
     public function __construct(
         CakeRepository $cakeRepository,
         EmailCakeRepository $emailCakeRepository
@@ -26,9 +41,9 @@ class CakeController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of the cakes.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
@@ -38,10 +53,10 @@ class CakeController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created cake in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return App\Http\Resources\CakeResource
      */
     public function store(Request $request)
     {
@@ -68,10 +83,10 @@ class CakeController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified cake.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return App\Http\Resources\CakeResource
      */
     public function show(int $id)
     {
@@ -81,7 +96,7 @@ class CakeController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified cake in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -113,7 +128,7 @@ class CakeController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified cake from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

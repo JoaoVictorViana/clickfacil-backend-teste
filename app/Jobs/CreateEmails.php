@@ -14,14 +14,33 @@ use Illuminate\Queue\SerializesModels;
 class CreateEmails implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
+    
+    /**
+     * Number of attempts.
+     *
+     * @var int $tries.
+     */
     public $tries = 3;
+
+    /**
+     * E-mail list.
+     *
+     * @var array $messages.
+     */
     public $emails;
+
+    /**
+     * Cake id.
+     *
+     * @var int $cake_id.
+     */
     public $cake_id;
 
     /**
      * Create a new job instance.
      *
+     * @param array $emails.
+     * @param int $cake_id.
      * @return void
      */
     public function __construct($emails, $cake_id)

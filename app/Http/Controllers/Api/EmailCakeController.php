@@ -11,17 +11,27 @@ use Illuminate\Http\Request;
 
 class EmailCakeController extends Controller
 {
+    /**
+     * Email Cake Repository.
+     *
+     * @var App\Http\Repositories\EmailCakeRepository $emailCakeRepository.
+     */
     protected $emailCakeRepository;
 
+    /**
+     * Construct of EmailCakeController.
+     *
+     * @param  App\Http\Repositories\EmailCakeRepository  $emailCakeRepository
+     */
     public function __construct(EmailCakeRepository $emailCakeRepository)
     {
         $this->emailCakeRepository = $emailCakeRepository;
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of the emails.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
@@ -31,10 +41,10 @@ class EmailCakeController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created email in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return App\Http\Resources\EmailCakeResource
      */
     public function store(Request $request)
     {
@@ -51,6 +61,13 @@ class EmailCakeController extends Controller
         return new EmailCakeResource($emailCake);
     }
 
+    
+    /**
+     * Store a list of the emails in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return App\Http\Resources\EmailCakeResource
+     */
     public function storeList(Request $request)
     {
         $validator = EmailCakeValidator::storeList($request);
@@ -76,10 +93,10 @@ class EmailCakeController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified email.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return App\Http\Resources\EmailCakeResource
      */
     public function show(int $id)
     {
@@ -89,7 +106,7 @@ class EmailCakeController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified email in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -120,7 +137,7 @@ class EmailCakeController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified email from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

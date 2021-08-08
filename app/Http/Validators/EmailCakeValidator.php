@@ -8,12 +8,23 @@ use Illuminate\Support\Facades\Validator;
 
 class EmailCakeValidator
 {
+    /**
+     * Message list.
+     *
+     * @var array $messages.
+     */
     protected $messages = [
         'required' => 'The :attribute field is required.',
         'string' => 'The :attribute field is not string.',
         'numeric' => 'The :attribute field is not numeric.',
     ];
 
+    /**
+     * Validate request data before store a email in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
     public function store(Request $request): IValidator
     {
         return Validator::make(
@@ -26,6 +37,12 @@ class EmailCakeValidator
         );
     }
 
+    /**
+     * Validate request data before store a email list in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
     public function storeList(Request $request): IValidator
     {
         return Validator::make(
@@ -38,6 +55,12 @@ class EmailCakeValidator
         );
     }
 
+    /**
+     * Validate request data before update a email in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
     public function update(Request $request): IValidator
     {
         return Validator::make(

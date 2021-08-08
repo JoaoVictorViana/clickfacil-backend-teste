@@ -17,15 +17,32 @@ class SendEmail implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /**
+     * Number of attempts.
+     *
+     * @var int $tries.
+     */
     public $tries = 3;
 
+    /**
+     * Cake model.
+     *
+     * @var App\Model\Cake $cake.
+     */
     public $cake;
 
+    /**
+     * User e-mail.
+     *
+     * @var string $email.
+     */
     public $email;
 
     /**
      * Create a new job instance.
      *
+     * @param App\Model\Cake $cake.
+     * @param string $email.
      * @return void
      */
     public function __construct(Cake $cake, $email)
